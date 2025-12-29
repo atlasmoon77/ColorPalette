@@ -2,8 +2,9 @@
 
 from PIL import Image
 import sys
-import numpy as np
-import matplotlib.pyplot as plt
+import csv
+from image_plot import plot_rgb_3d
+
 
 image_name = sys.argv[1]
 img = Image.open(image_name)
@@ -16,21 +17,19 @@ b = []
 for y in range(height):
     for x in range(width):
         r_i, g_i, b_i = rgb_img.getpixel((x, y))
-        print('[', x, ', ', y, '] :: ', 'R: ', r_i, ' G: ', g_i, ' B: ', b_i)
+        # DEBUG PURPOSES: print('[', x, ', ', y, '] :: ', 'R: ', r_i, ' G: ', g_i, ' B: ', b_i)
         r.append(r_i)
         g.append(g_i)
         b.append(b_i)
 
-fig = plt.figure()
+rgb = zip(r, g, b)
+column_headers = ['r', 'g', 'b']
 
-#syntax for 3-D projection
-ax = plt.axes(projection ='3d')
+with open('image_rgb_output.csv', 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(column_headers)
+    writer.writerows(rgb)
 
-x = np.array(r)
-y = np.array(g)
-z = np.array(b)
-C = np.transpose([x])
+print("File 'image_rgb_output' created successfully")
 
-ax.scatter(r, g, b, c=np.transpose([x/255,y/255,z/255]))
-ax.set_title ('3d Scatter plot for RGB values')
-plt.show()
+plot_rgb_3d()
