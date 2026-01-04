@@ -31,5 +31,12 @@ with open('image_rgb_output.csv', 'w', newline='') as csvfile:
     writer.writerows(rgb)
 
 print("File 'image_rgb_output' created successfully")
+scores = []
 
-image_plot.plot_rgb_kmeans()
+for k in range(2, 11):
+    score = image_plot.get_kmeans_score(k)
+    print(f"Calculated score for {k} clusters: {score}")
+    scores.append(score)
+
+best_k = scores.index(max(scores)) + 2
+image_plot.plot_rgb_kmeans(best_k)

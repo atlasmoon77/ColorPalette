@@ -7,6 +7,7 @@ import plotly.io as pio
 
 #scikit-learn
 from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
 
 import matplotlib.pyplot as plt
 
@@ -58,16 +59,27 @@ def plot_rgb_3d():
     # ax.set_title ('3d Scatter plot for RGB values')
     # plt.show()
 
-def plot_rgb_kmeans():
+def get_kmeans_score(k):
     r, g, b = get_rgb()
-    x, y, z = np.array(r), np.array(g), np.array(b)
-    X = zip(r, g, b)
-    kmeans = KMeans(n_clusters=4)
-    kmeans.fit(np.transpose([r, g, b]))
+    X = np.transpose([r, g, b])
+    kmeans = KMeans(n_clusters=k)
+    kmeans.fit(X)
+    labels = kmeans.labels_
+    return silhouette_score(X, labels)
+
+def plot_rgb_kmeans(k):
+    r, g, b = get_rgb()
+    X = np.transpose([r, g, b])
+    kmeans = KMeans(n_clusters=k)
+    kmeans.fit(X)
 
     centroids = kmeans.cluster_centers_
     labels = kmeans.labels_
-    color_map = {0: centroids[0].tolist(), 1: centroids[1].tolist(), 2: centroids[2].tolist(), 3: centroids[3].tolist()}
+    color_map = {}
+    for i in range(k):
+        color_map[i] = centroids[i].tolist()
+    # 
+    # color_map = {0: centroids[0].tolist(), 1: centroids[1].tolist(), 2: centroids[2].tolist(), 3: centroids[3].tolist()}
 
     point_colors = [color_map[label] for label in labels]
     point_colors_n = [[col/255 for col in row] for row in point_colors]
