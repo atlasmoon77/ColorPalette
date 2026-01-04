@@ -3,7 +3,7 @@
 from PIL import Image
 import sys
 import csv
-from image_plot import plot_rgb_3d
+import image_plot
 
 
 image_name = sys.argv[1]
@@ -32,4 +32,4 @@ with open('image_rgb_output.csv', 'w', newline='') as csvfile:
 
 print("File 'image_rgb_output' created successfully")
 
-plot_rgb_3d()
+image_plot.plot_rgb_kmeans()

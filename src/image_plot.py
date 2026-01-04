@@ -1,9 +1,17 @@
 import numpy as np
+import csv
+import pandas as pd
+
+# Plotly
 import plotly.graph_objects as go
 import plotly.express as px
 import plotly.io as pio
-import csv
-import pandas as pd
+
+#scikit-learn
+from sklearn.cluster import KMeans
+
+import matplotlib.pyplot as plt
+
 
 def get_rgb():
 
@@ -51,3 +59,20 @@ def plot_rgb_3d():
     # ax.scatter(r, g, b, c=np.transpose([x/255,y/255,z/255]))
     # ax.set_title ('3d Scatter plot for RGB values')
     # plt.show()
+
+def plot_rgb_kmeans():
+    r, g, b = get_rgb()
+    x, y, z = np.array(r), np.array(g), np.array(b)
+    X = zip(r, g, b)
+    kmeans = KMeans(n_clusters=4)
+    kmeans.fit(np.transpose([r, g, b]))
+    labels = kmeans.labels_
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(r, g, b, c=labels)
+    ax.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], 
+               kmeans.cluster_centers_[:, 2], marker='x', color='red', s=100 , linewidths=3)
+    
+    plt.show()
+    
