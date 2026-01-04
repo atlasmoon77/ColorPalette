@@ -1,9 +1,7 @@
 import numpy as np
 import csv
-import pandas as pd
 
 # Plotly
-import plotly.graph_objects as go
 import plotly.express as px
 import plotly.io as pio
 
@@ -66,11 +64,17 @@ def plot_rgb_kmeans():
     X = zip(r, g, b)
     kmeans = KMeans(n_clusters=4)
     kmeans.fit(np.transpose([r, g, b]))
+
+    centroids = kmeans.cluster_centers_
     labels = kmeans.labels_
+    color_map = {0: centroids[0].tolist(), 1: centroids[1].tolist(), 2: centroids[2].tolist(), 3: centroids[3].tolist()}
+
+    point_colors = [color_map[label] for label in labels]
+    point_colors_n = [[col/255 for col in row] for row in point_colors]
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.scatter(r, g, b, c=labels)
+    ax.scatter(r, g, b, c=point_colors_n)
     ax.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], 
                kmeans.cluster_centers_[:, 2], marker='x', color='red', s=100 , linewidths=3)
     
